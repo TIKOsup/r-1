@@ -1,12 +1,18 @@
 import { useState } from "react";
+import { Ellipsis, Trash2 } from "lucide-react";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -50,6 +56,12 @@ export default function TodoList() {
     setTodoItems(nextTodoItems);
   }
 
+  function handleDeleteTodo(id) {
+    const nextTodoItems = todoItems.filter(item => item.id !== id);
+    console.log(nextTodoItems)
+    setTodoItems(nextTodoItems);
+  }
+
   return (
     <Card className="w-[350px]">
       <CardHeader>
@@ -59,31 +71,40 @@ export default function TodoList() {
       <CardContent className="flex flex-col space-y-5">
         <form onSubmit={handleSubmit} className="flex flex-row space-x-2">
           <Label htmlFor="task-name" className="sr-only">Task</Label>
-          <Input id="task-name" type="text" placeholder="Task" value={inputText} onChange={handleChangeInput} />
-          <Button type="submit">Add</Button>
+          <Input id="task-name" type="text" placeholder="Task" value={inputText} onChange={handleChangeInput} autoComplete="off" />
+          <Button type="submit" className="cursor-pointer">Add</Button>
         </form>
-        <ul className="space-y-2">
-          {todoItems.map(item => <Todo data={item} onChange={handleChangeTodo} key={item.id} />)}
+        <ul>
+          {todoItems.map(item => <Todo data={item} onChange={handleChangeTodo} onDelete={handleDeleteTodo} key={item.id} />)}
         </ul>
       </CardContent>
-      <CardFooter>
-        <p>Footer</p>
-      </CardFooter>
     </Card>
   )
 }
 
 
-function Todo({ data, onChange }) {
+function Todo({ data, onChange, onDelete }) {
   return (
-    <li className="flex items-center space-x-2">
+    <li className="flex items-center justify-around space-x-2 group">
       <Checkbox id={"todo-item-" + data.id} checked={data.done} onCheckedChange={() => onChange(data.id)} />
       <label
         htmlFor={"todo-item-" + data.id}
-        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mr-auto"
       >
         {data.text}
       </label>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="link" size="icon" className={"cursor-pointer invisible group-hover:visible"}>
+            <Ellipsis className="justify-self-end" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem onSelect={() => onDelete(data.id)}>
+            <Trash2 /> Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </li>
   )
 }
