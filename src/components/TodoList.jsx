@@ -23,6 +23,7 @@ export default function TodoList() {
 
   function handleSubmit(event) {
     event.preventDefault();
+    if (!inputText.trim()) return;
     setTodoItems([
       ...todoItems,
       {
@@ -58,7 +59,7 @@ export default function TodoList() {
       <CardContent className="flex flex-col space-y-5">
         <form onSubmit={handleSubmit} className="flex flex-row space-x-2">
           <Label htmlFor="task-name" className="sr-only">Task</Label>
-          <Input id="task-name" type="text" placeholder="Task" onChange={handleChangeInput} />
+          <Input id="task-name" type="text" placeholder="Task" value={inputText} onChange={handleChangeInput} />
           <Button type="submit">Add</Button>
         </form>
         <ul className="space-y-2">
