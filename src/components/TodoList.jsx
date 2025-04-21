@@ -58,7 +58,6 @@ export default function TodoList() {
 
   function handleDeleteTodo(id) {
     const nextTodoItems = todoItems.filter(item => item.id !== id);
-    console.log(nextTodoItems)
     setTodoItems(nextTodoItems);
   }
 
@@ -100,7 +99,7 @@ function Todo({ data, onChange, onDelete }) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem onSelect={() => onDelete(data.id)}>
+          <DropdownMenuItem onSelect={() => onDelete(data.id)} className="cursor-pointer" >
             <Trash2 /> Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
